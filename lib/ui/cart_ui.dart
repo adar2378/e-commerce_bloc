@@ -97,21 +97,14 @@ class CartUi extends StatelessWidget {
                     ),
                     Container(
                       padding: EdgeInsets.all(12),
-                      height: MediaQuery.of(context).size.height / 5 - 56,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: <Widget>[
-                          Container(
-                            height: MediaQuery.of(context).size.height / 5 - 80,
-                            child: Text(
-                                "Total price: ৳ ${snapshot.data.getTotalPrice()}"),
-                          ),
-                          // RaisedButton(
-                          //   onPressed: () {},
-                          //   child: Text("Buy"),
-                          // )
-                        ],
+                      //height: MediaQuery.of(context).size.height / 5 - 56,
+                      child: FittedBox(
+                        fit: BoxFit.cover,
+                        child: Container(
+                          //height: MediaQuery.of(context).size.height / 5 - 80,
+                          child: Text(
+                              "Total price: ৳ ${snapshot.data.getTotalPrice()}"),
+                        ),
                       ),
                     )
                   ],

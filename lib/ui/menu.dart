@@ -7,6 +7,7 @@ import 'package:just_like_this/models/product.dart';
 import 'product_details.dart';
 import 'package:just_like_this/Bloc/cart_provider.dart';
 import 'package:just_like_this/Bloc/bloc_provider.dart';
+import 'package:just_like_this/Bloc/search_bloc.dart';
 import 'cart_ui.dart';
 import 'package:just_like_this/models/cart.dart';
 
@@ -41,23 +42,30 @@ class _MenuState extends State<Menu> {
           "500", 4.8, true),
     ];
     myList = new ProductList(list);
+    controller.addListener(listener);
   }
 
   LikeBloc likeBloc = LikeBloc();
   CartBloc cartBloc = CartBloc();
+  SearchBloc searchBloc;
+  final controller = TextEditingController();
 
   @override
   void dispose() {
     likeBloc.dispose();
     cartBloc.dispose();
+    searchBloc.dispose();
+    controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    searchBloc = SearchBloc(myList);
     return CartProvider(
       cartBloc: cartBloc,
       child: Scaffold(
+        backgroundColor: Colors.white,
         drawer: Drawer(
           // Add a ListView to the drawer. This ensures the user can scroll
           // through the options in the Drawer if there isn't enough vertical
@@ -206,6 +214,7 @@ class _MenuState extends State<Menu> {
 
                       // padding: ,
                       child: TextField(
+                        controller: controller,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           contentPadding: const EdgeInsets.all(16),
@@ -277,6 +286,73 @@ class _MenuState extends State<Menu> {
                   color: Colors.white,
                 )
               ],
+            ),
+            SliverToBoxAdapter(
+              child: StreamBuilder<ProductList>(
+                initialData: ProductList.empty(),
+                stream: searchBloc.outputStream,
+                builder: (context, snapshot) {
+                  double h;
+                  if (snapshot.hasData) {
+                    if (snapshot.data.getList().isEmpty) {
+                      h = 0;
+                    } else {
+                      h = 150;
+                    }
+
+                    return Container(
+                      margin: EdgeInsets.symmetric(
+                        horizontal: 8,
+                      ),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(15),
+                              bottomRight: Radius.circular(15))),
+                      height: h,
+                      child: ListView.builder(
+                        itemCount: snapshot.data.getList().length,
+                        itemBuilder: (context, index) {
+                          BorderRadius borderRadius;
+                          BoxShadow boxShadow;
+                          if (snapshot.data.getList().length - 1 == index) {
+                            boxShadow = BoxShadow(
+                                color: Colors.black26,
+                                offset: Offset(1, 2),
+                                blurRadius: 5);
+                          } else {
+                            boxShadow = BoxShadow(
+                                color: Colors.black26,
+                                offset: Offset(0, 0),
+                                blurRadius: 1);
+                          }
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ProductDetails(
+                                        myList.getList()[index], cartBloc)),
+                              );
+                            },
+                            child: Container(
+                                decoration: BoxDecoration(
+                                  boxShadow: [boxShadow],
+                                  borderRadius: borderRadius,
+                                  color: index % 2 == 0
+                                      ? Colors.blue.shade100
+                                      : Colors.blue.shade300,
+                                ),
+                                alignment: Alignment.center,
+                                height: 30,
+                                child:
+                                    Text(snapshot.data.getList()[index].name)),
+                          );
+                        },
+                      ),
+                    );
+                  }
+                },
+              ),
             ),
             SliverToBoxAdapter(
               child: Container(
@@ -387,5 +463,15 @@ class _MenuState extends State<Menu> {
         ),
       ),
     );
+  }
+
+  String listener() {
+    print(controller.text);
+    // if (controller.text.isNotEmpty) {
+    //   searchBloc.inputSink.add(controller.text);
+    // }
+    searchBloc.inputSink.add(controller.text);
+
+    return controller.text;
   }
 }

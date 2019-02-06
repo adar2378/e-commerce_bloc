@@ -396,28 +396,31 @@ class _ProductDetailsState extends State<ProductDetails>
                   Expanded(
                     flex: 4,
                     child: Container(
+                      width: MediaQuery.of(context).size.width / 3,
                       height: (MediaQuery.of(context).size.height / 2) / 8 - 2,
                       child: RaisedButton(
                         color: Colors.yellow.shade900,
                         onPressed: () {},
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Icon(
-                              Icons.shopping_cart,
-                              color: Colors.white,
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              "Buy Now",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                  fontSize: 18),
-                            ),
-                          ],
+                        child: FittedBox(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Icon(
+                                Icons.shopping_cart,
+                                color: Colors.white,
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                "Buy Now",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                    fontSize: 18),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -425,6 +428,7 @@ class _ProductDetailsState extends State<ProductDetails>
                   Expanded(
                     flex: 4,
                     child: Container(
+                      width: MediaQuery.of(context).size.width / 3,
                       height: (MediaQuery.of(context).size.height / 2) / 8 - 2,
                       child: RaisedButton(
                         color: Colors.blue.shade600,
@@ -436,29 +440,35 @@ class _ProductDetailsState extends State<ProductDetails>
                             animationController.forward();
                           });
                         },
-                        child: Text(
-                          "Add to Cart",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              fontSize: 18),
+                        child: FittedBox(
+                          child: Text(
+                            "Add to Cart",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                fontSize: 18),
+                          ),
                         ),
                       ),
                     ),
                   ),
                   Expanded(
-                    flex: 3,
-                    child: Container(
-                      height: (MediaQuery.of(context).size.height / 2) / 8 - 2,
-                      child: RaisedButton(
-                        color: Colors.blue.shade200,
-                        onPressed: () {},
-                        child: Text(
-                          "Share",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              fontSize: 18),
+                    flex: 4,
+                    child: FittedBox(
+                      fit: BoxFit.cover,
+                      child: Container(
+                        height:
+                            (MediaQuery.of(context).size.height / 2) / 8 - 2,
+                        child: RaisedButton(
+                          color: Colors.blue.shade200,
+                          onPressed: () {},
+                          child: Text(
+                            "Share",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                fontSize: 18),
+                          ),
                         ),
                       ),
                     ),
