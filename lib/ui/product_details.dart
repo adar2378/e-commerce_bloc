@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:just_like_this/models/product.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:just_like_this/ui/search_results.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:just_like_this/Bloc/likeBloc.dart';
 import 'package:just_like_this/Bloc/bloc_provider.dart';
 import 'package:just_like_this/Bloc/cart_bloc.dart';
 import 'package:just_like_this/models/cart.dart';
 import 'package:just_like_this/models/cart_item.dart';
-import 'package:just_like_this/Bloc/cart_provider.dart';
 import 'cart_ui.dart';
+import 'package:just_like_this/models/productList.dart';
 
 class ProductDetails extends StatefulWidget {
   final Product product;
   final CartBloc cartBloc;
-
-  ProductDetails(this.product, this.cartBloc);
+  final ProductList productList;
+  ProductDetails(this.product, this.cartBloc, this.productList);
 
   _ProductDetailsState createState() => _ProductDetailsState();
 }
@@ -119,7 +120,14 @@ class _ProductDetailsState extends State<ProductDetails>
                     actions: <Widget>[
                       IconButton(
                         icon: Icon(Icons.search),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SearchResult(
+                                    widget.cartBloc, widget.productList)),
+                          );
+                        },
                       ),
                       IconButton(
                         icon: StreamBuilder<Cart>(

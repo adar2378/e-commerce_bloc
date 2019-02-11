@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'models/product.dart';
-import 'ui/product_details.dart';
+
 import 'ui/menu.dart';
 
 void main() => runApp(MyApp());

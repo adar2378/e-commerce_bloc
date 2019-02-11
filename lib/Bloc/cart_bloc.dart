@@ -23,6 +23,11 @@ class CartBloc {
     outputController.add(_cart);
   }
 
+  void changeCount(int index, bool isIncreased) {
+    _cart.changeItemCount(index, isIncreased);
+    outputController.add(_cart);
+  }
+
   void onData(CartItem event) {
     _cart.addToCart(event);
     outputController.add(_cart);

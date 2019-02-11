@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:just_like_this/Bloc/cart_bloc.dart';
 import 'package:just_like_this/Bloc/likeBloc.dart';
+import 'package:just_like_this/models/catalog.dart';
 import 'package:just_like_this/models/productList.dart';
 import 'package:just_like_this/models/product.dart';
 import 'product_details.dart';
 import 'package:just_like_this/Bloc/cart_provider.dart';
-import 'package:just_like_this/Bloc/bloc_provider.dart';
-import 'package:just_like_this/Bloc/search_bloc.dart';
 import 'cart_ui.dart';
 import 'package:just_like_this/models/cart.dart';
+import 'search_results.dart';
+import 'user.dart';
 
 class Menu extends StatefulWidget {
   _MenuState createState() => _MenuState();
@@ -23,23 +24,23 @@ class _MenuState extends State<Menu> {
 
     List<Product> list = [
       Product(2, "Hat", "https://via.placeholder.com/300", "This is a hat",
-          "100", 4, true),
+          "100", 4, true, "Tech"),
       Product(2, "Bat", "https://via.placeholder.com/300", "This is a Bat",
-          "120", 4.5, true),
+          "120", 4.5, true, "Tech"),
       Product(2, "Shoe", "https://via.placeholder.com/300", "This is a Shoe",
-          "200", 4.6, true),
+          "200", 4.6, true, "Dress"),
       Product(2, "Toy", "https://via.placeholder.com/300", "This is a Toy",
-          "170", 4.1, true),
+          "170", 4.1, true, "Dress"),
       Product(2, "Cow", "https://via.placeholder.com/300", "This is a Cow",
-          "90", 4, true),
-      Product(2, "Bat", "https://via.placeholder.com/300", "This is a Bat",
-          "500", 4.8, true),
+          "90", 4, true, "Decoration"),
+      Product(2, "Tat", "https://via.placeholder.com/300", "This is a Tat",
+          "500", 4.8, true, "Decoration"),
       Product(2, "fat", "https://via.placeholder.com/300", "This is a fat",
-          "500", 4.8, true),
+          "500", 4.8, true, "Unknown"),
       Product(2, "Sad", "https://via.placeholder.com/300", "This is a Sad",
-          "500", 4.8, true),
+          "500", 4.8, true, "Tech"),
       Product(2, "Mad", "https://via.placeholder.com/300", "This is a Mad",
-          "500", 4.8, true),
+          "500", 4.8, true, "Unknown"),
     ];
     myList = new ProductList(list);
     controller.addListener(listener);
@@ -47,21 +48,20 @@ class _MenuState extends State<Menu> {
 
   LikeBloc likeBloc = LikeBloc();
   CartBloc cartBloc = CartBloc();
-  SearchBloc searchBloc;
+
   final controller = TextEditingController();
 
   @override
   void dispose() {
     likeBloc.dispose();
     cartBloc.dispose();
-    searchBloc.dispose();
+
     controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    searchBloc = SearchBloc(myList);
     return CartProvider(
       cartBloc: cartBloc,
       child: Scaffold(
@@ -113,8 +113,24 @@ class _MenuState extends State<Menu> {
                           width: 10,
                         ),
                         title: Text('Xbox'),
+                        onTap: () {
+                          Navigator.pop(context);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Catalog(myList, "Tech")),
+                          );
+                        },
                       ),
                       ListTile(
+                        onTap: () {
+                          Navigator.pop(context);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Catalog(myList, "Tech")),
+                          );
+                        },
                         leading: Container(
                           height: 10,
                           width: 10,
@@ -204,30 +220,43 @@ class _MenuState extends State<Menu> {
                 background: Stack(
                   alignment: Alignment.bottomCenter,
                   children: <Widget>[
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: Colors.white,
-                      ),
-                      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                      // height: 60,
+                    GestureDetector(
+                      onTap: () {
+                        print("Tapped on search");
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  SearchResult(cartBloc, myList)),
+                        );
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: Colors.white,
+                        ),
+                        margin:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                        // height: 60,
 
-                      // padding: ,
-                      child: TextField(
-                        controller: controller,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          contentPadding: const EdgeInsets.all(16),
-                          hintText: "Search Your Product",
-                          prefixIcon: Container(
-                              margin: EdgeInsets.fromLTRB(10, 8, 6, 8),
-                              decoration: BoxDecoration(
-                                  color: Colors.blue,
-                                  borderRadius: BorderRadius.circular(35)),
-                              child: Icon(
-                                Icons.search,
-                                color: Colors.white,
-                              )),
+                        // padding: ,
+                        child: TextField(
+                          controller: controller,
+                          enabled: false,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            contentPadding: const EdgeInsets.all(16),
+                            hintText: "Search Your Product",
+                            prefixIcon: Container(
+                                margin: EdgeInsets.fromLTRB(10, 8, 6, 8),
+                                decoration: BoxDecoration(
+                                    color: Colors.blue,
+                                    borderRadius: BorderRadius.circular(35)),
+                                child: Icon(
+                                  Icons.search,
+                                  color: Colors.white,
+                                )),
+                          ),
                         ),
                       ),
                     ),
@@ -281,93 +310,42 @@ class _MenuState extends State<Menu> {
                   ),
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) => User()
+                    ));
+                  },
                   icon: Icon(Icons.more_vert),
                   color: Colors.white,
                 )
               ],
             ),
             SliverToBoxAdapter(
-              child: StreamBuilder<ProductList>(
-                initialData: ProductList.empty(),
-                stream: searchBloc.outputStream,
-                builder: (context, snapshot) {
-                  double h;
-                  if (snapshot.hasData) {
-                    if (snapshot.data.getList().isEmpty) {
-                      h = 0;
-                    } else {
-                      h = 150;
-                    }
-
-                    return Container(
-                      margin: EdgeInsets.symmetric(
-                        horizontal: 8,
-                      ),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(15),
-                              bottomRight: Radius.circular(15))),
-                      height: h,
-                      child: ListView.builder(
-                        itemCount: snapshot.data.getList().length,
-                        itemBuilder: (context, index) {
-                          BorderRadius borderRadius;
-                          BoxShadow boxShadow;
-                          if (snapshot.data.getList().length - 1 == index) {
-                            boxShadow = BoxShadow(
-                                color: Colors.black26,
-                                offset: Offset(1, 2),
-                                blurRadius: 5);
-                          } else {
-                            boxShadow = BoxShadow(
-                                color: Colors.black26,
-                                offset: Offset(0, 0),
-                                blurRadius: 1);
-                          }
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ProductDetails(
-                                        myList.getList()[index], cartBloc)),
-                              );
-                            },
-                            child: Container(
-                                decoration: BoxDecoration(
-                                  boxShadow: [boxShadow],
-                                  borderRadius: borderRadius,
-                                  color: index % 2 == 0
-                                      ? Colors.blue.shade100
-                                      : Colors.blue.shade300,
-                                ),
-                                alignment: Alignment.center,
-                                height: 30,
-                                child:
-                                    Text(snapshot.data.getList()[index].name)),
-                          );
-                        },
-                      ),
-                    );
-                  }
-                },
-              ),
-            ),
-            SliverToBoxAdapter(
               child: Container(
                 height: 200,
                 padding: EdgeInsets.symmetric(vertical: 8),
                 child: Swiper(
+                  layout: SwiperLayout.STACK,
+                  
                   itemBuilder: (BuildContext context, int index) {
-                    return new Image.network(
-                      "http://via.placeholder.com/288x188",
-                      fit: BoxFit.fill,
+                    return Stack(
+                      alignment: Alignment.topCenter,
+                      children: <Widget>[
+                        Image.network(
+                          "http://via.placeholder.com/288x188",
+                          fit: BoxFit.fill,
+                        ),
+                        Text(
+                          index.toString(),
+                          style: TextStyle(fontSize: 20),
+                        )
+                      ],
                     );
                   },
                   itemCount: 10,
-                  viewportFraction: 0.85,
-                  scale: 0.9,
+                  itemWidth: 300.0,
+                  // viewportFraction: 0.85,
+                  // scale: 0.9,
                 ),
               ),
             ),
@@ -442,7 +420,7 @@ class _MenuState extends State<Menu> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => ProductDetails(
-                                myList.getList()[index], cartBloc)),
+                                myList.getList()[index], cartBloc, myList)),
                       );
                     },
                     child: new Container(
@@ -470,7 +448,7 @@ class _MenuState extends State<Menu> {
     // if (controller.text.isNotEmpty) {
     //   searchBloc.inputSink.add(controller.text);
     // }
-    searchBloc.inputSink.add(controller.text);
+    // searchBloc.inputSink.add(controller.text);
 
     return controller.text;
   }

@@ -6,9 +6,10 @@ class Product {
   String price;
   double rating;
   bool isLiked;
+  String catagory;
 
   Product(this.id, this.name, this.imageLink, this.description, this.price,
-      this.rating, this.isLiked);
+      this.rating, this.isLiked, this.catagory);
 
   void changeLikeValue() {
     isLiked = !isLiked;

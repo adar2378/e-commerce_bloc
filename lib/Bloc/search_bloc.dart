@@ -7,7 +7,7 @@ class SearchBloc {
   StreamController<String> inputController = StreamController<String>();
   Sink<String> get inputSink => inputController.sink;
   StreamController<ProductList> outputController =
-      StreamController<ProductList>();
+      StreamController<ProductList>.broadcast();
 
   Stream<ProductList> get outputStream => outputController.stream;
 

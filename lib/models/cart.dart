@@ -11,6 +11,16 @@ class Cart {
     return cartList;
   }
 
+  void changeItemCount(int index, bool isIncreased) {
+    if (isIncreased) {
+      cartList[index].count = cartList[index].count + 1;
+      totalItems++;
+    } else {
+      cartList[index].count = cartList[index].count - 1;
+      totalItems--;
+    }
+  }
+
   int getTotalPrice() {
     int total = 0;
     for (int i = 0; i < cartList.length; i++) {
@@ -30,6 +40,7 @@ class Cart {
 
   void deleteItem(int index) {
     totalItems = totalItems - cartList[index].count;
+    print("priting after removing : $totalItems");
     cartList.removeAt(index);
   }
 

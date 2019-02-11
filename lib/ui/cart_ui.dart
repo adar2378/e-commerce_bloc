@@ -1,12 +1,11 @@
 import 'package:just_like_this/models/cart.dart';
 import 'package:flutter/material.dart';
-import 'package:just_like_this/models/cart.dart';
 import 'package:just_like_this/Bloc/cart_bloc.dart';
 import 'package:just_like_this/Bloc/cart_provider.dart';
 
 class CartUi extends StatelessWidget {
-  Cart cart;
-  CartBloc cartBloc;
+  final Cart cart;
+  final CartBloc cartBloc;
   CartUi(this.cart, this.cartBloc);
 
   @override
@@ -39,16 +38,20 @@ class CartUi extends StatelessWidget {
               return Container(
                 height: MediaQuery.of(context).size.height - 56,
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     Container(
-                      color: Colors.grey,
+                      color: Colors.white,
                       height: MediaQuery.of(context).size.height -
-                          MediaQuery.of(context).size.height / 5,
+                          MediaQuery.of(context).size.height / 5-34,
                       child: ListView.builder(
                         itemCount: snapshot.data.getCartLength(),
                         itemBuilder: (context, index) {
                           return Container(
+                            margin: EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 4),
                             decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
                               color: index % 2 == 0
                                   ? Colors.green.shade200
                                   : Colors.blue.shade200,
@@ -65,6 +68,7 @@ class CartUi extends StatelessWidget {
                                         .data.cartList[index].product.imageLink,
                                     height: 80,
                                     width: 120,
+                                    fit: BoxFit.fill,
                                   ),
                                 ),
                                 Column(
@@ -79,8 +83,38 @@ class CartUi extends StatelessWidget {
                                     Text("৳ " +
                                         snapshot.data.cartList[index].product
                                             .price),
-                                    Text(snapshot.data.cartList[index].count
-                                        .toString())
+                                    Row(
+                                      children: <Widget>[
+                                        IconButton(
+                                          onPressed: () {
+                                            cartBloc.changeCount(index, true);
+                                          },
+                                          icon: Icon(Icons.add_circle_outline),
+                                        ),
+                                        Text(snapshot.data.cartList[index].count
+                                            .toString()),
+                                        IconButton(
+                                          onPressed: () {
+                                            if (snapshot
+                                                    .data.cartList[index].count
+                                                    .toString() !=
+                                                "1") {
+                                              cartBloc.changeCount(
+                                                  index, false);
+                                            } else {
+                                              Scaffold.of(context)
+                                                  .showSnackBar(SnackBar(
+                                                duration: Duration(seconds: 1),
+                                                content: Text(
+                                                    "You must keep one item"),
+                                              ));
+                                            }
+                                          },
+                                          icon:
+                                              Icon(Icons.remove_circle_outline),
+                                        ),
+                                      ],
+                                    )
                                   ],
                                 ),
                                 FlatButton(
@@ -95,16 +129,39 @@ class CartUi extends StatelessWidget {
                         },
                       ),
                     ),
-                    Container(
-                      padding: EdgeInsets.all(12),
-                      //height: MediaQuery.of(context).size.height / 5 - 56,
-                      child: FittedBox(
-                        fit: BoxFit.cover,
-                        child: Container(
-                          //height: MediaQuery.of(context).size.height / 5 - 80,
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Align(
+                          alignment: Alignment.centerRight,
                           child: Text(
-                              "Total price: ৳ ${snapshot.data.getTotalPrice()}"),
-                        ),
+                              "Sub-total: ৳ ${snapshot.data.getTotalPrice()}")),
+                    ),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                      // height: MediaQuery.of(context).size.height / 5,
+                      child: Row(
+                        children: <Widget>[
+                          Container(
+                            color: Colors.yellow.shade300,
+                            width: MediaQuery.of(context).size.width / 2,
+                            height: 55,
+                            child: FlatButton(
+                              onPressed: () {},
+                              child: Text(
+                                  "Total price: ৳ ${snapshot.data.getTotalPrice()}"),
+                            ),
+                          ),
+                          Container(
+                            color: Colors.yellow.shade900,
+                            width: MediaQuery.of(context).size.width / 2,
+                            height: 55,
+                            child: FlatButton(
+                              onPressed: () {},
+                              child:
+                                  Text("Buy(${snapshot.data.getTotalItems()})"),
+                            ),
+                          ),
+                        ],
                       ),
                     )
                   ],
