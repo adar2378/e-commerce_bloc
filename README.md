@@ -1,6 +1,10 @@
-# just_like_this
+# E-commerce using Bloc
 
-A new Flutter project.
+A very basic app with simple e-commerce functionality.
+
+## Demo
+
+[![Alt text](https://img.youtube.com/vi/ANu4rbwTMzA/0.jpg)](https://www.youtube.com/watch?v=ANu4rbwTMzA)
 
 ## Getting Started
 
